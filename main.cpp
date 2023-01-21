@@ -33,6 +33,7 @@ struct Result{
     size_t len = 0; 
 };
 
+
 Result find_longest_series_volkov(const Series& series){
     std::array<size_t, 2> edges_current{0, 0};
     std::array<size_t, 2> edges_biggest{0, 0};
@@ -65,6 +66,80 @@ Result find_longest_series_volkov(const Series& series){
 
     return res;
 }
+
+
+// @fedruches comparator
+auto first_comp = [](auto x, auto y) {
+  if (x.second == y.second) {
+    return std::min(x, y, [](auto x, auto y) { return x.first < y.first; });
+  } else
+    return std::max(x, y,
+                    [](auto x, auto y) { return x.second < y.second; });
+};
+Result find_longest_series_fedruches(const Series& input) {
+    // @fedruches
+    std::pair<int, int> asc = {0, 0};
+    std::pair<int, int> dsc = {0, 0};
+    std::pair<int, int> max_pos = asc;
+    std::pair<int, int> max_neg = dsc;
+    bool is_pos = false;
+    bool is_neg = false;
+
+  if (input.size() < 2) {
+      return Result { 0, 0, 0 };
+  }
+
+  for (int i = 0; i < input.size() - 1; ++i) {
+    auto diff = input[i] - input[i + 1];
+
+    if (diff < 0) {
+      ++asc.second;
+
+      if (!is_pos) {
+        asc.first = i;
+      }
+      is_pos = true;
+      is_neg = false;
+
+      if (dsc.second > max_neg.second) {
+        max_neg = dsc;
+        dsc.second = 0;
+      }
+    } else if (diff > 0) {
+      ++dsc.second;
+
+      if (is_pos) {
+        dsc.first = i;
+      }
+      is_pos = false;
+      is_neg = true;
+
+      if (asc.second > max_pos.second) {
+        max_pos = asc;
+        asc.second = 0;
+      }
+    }
+    else {
+      ++dsc.second;
+      ++asc.second;
+      is_pos = true;
+      is_neg = true;
+    }
+  }
+
+
+  auto pos = first_comp(max_pos, asc);
+  auto neg = first_comp(max_neg, dsc);
+  auto res = first_comp(pos, neg);
+
+  return Result { 
+        static_cast<size_t>(res.first), 
+        static_cast<size_t>(res.first + res.second), 
+        static_cast<size_t>(res.second + 1) 
+    };
+}
+
+
 
 Result find_longest_series(const Series& series){
     // @iskinmike https://github.com/iskinmike/cv_group_challenge/tree/main
@@ -131,6 +206,7 @@ void benchmark()
     for (size_t i = 0; i < 10000; i++) {
         test[0] = dist(rng);
         find_longest_series_volkov(test);
+        // find_longest_series_fedruches(test);
         // find_longest_series(test);
     }
     auto end = std::chrono::steady_clock::now();
