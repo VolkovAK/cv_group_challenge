@@ -7,9 +7,8 @@
 
 Сравним решения, если кто захочет решать)
 
-## build
+## build/run
 
 ```sh
-g++ -Ofast main.cpp
-./a.out
+python main.py
 ```
