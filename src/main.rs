@@ -12,6 +12,7 @@ fn find_longest_series(series: &Vec<i32>) -> SeriesResult {
     let mut edges_biggest = [0, 0];
     let mut current_direction = 0;
     let mut prev_direction = 0;
+    let mut diff;
     
     for i in 0..series.len() {
         if edges_current[1] - edges_current[0] > edges_biggest[1] - edges_biggest[0] {
@@ -21,10 +22,11 @@ fn find_longest_series(series: &Vec<i32>) -> SeriesResult {
         if i == series.len() - 1 {
             break;
         }
-        if series[i+1] - series[i] > 0 {
+        diff = series[i + 1] - series[i];
+        if diff > 0 {
             current_direction = 1;
         }
-        else if series[i+1] - series[i] < 0 {
+        else if diff < 0 {
             current_direction = -1;
         }
         // no diff, still monotonic
@@ -45,14 +47,19 @@ fn find_longest_series(series: &Vec<i32>) -> SeriesResult {
 fn benchmark() {
     let mut rng = rand::thread_rng();
 
-    let mut test: Vec<i32> = (0..100).map(|_| rng.gen_range(-100..100)).collect(); 
-    let before = Instant::now();
+    let mut total_time_generating = 0;
+    let mut total_time_calculating = 0;
     for _ in 0..100 {
+        let before = Instant::now();
         let test: Vec<i32> = (0..1_000_000).map(|_| rng.gen_range(-100..100)).collect(); 
-        // test[0] = rng.gen_range(-100..100);
+        total_time_generating += before.elapsed().as_nanos();
+
+        let before = Instant::now();
         find_longest_series(&test);
+        total_time_calculating += before.elapsed().as_nanos();
     }
-    println!("Elapsed time in microseconds: {} µs", before.elapsed().as_micros());
+    // println!("Elapsed time in microseconds: \n\t{} - generating\n\t{} - calculating", total_time_generating / 1000, total_time_calculating / 1000);
+    println!("Elapsed time in nanoseconds: {}", total_time_calculating);
 
 }
 
