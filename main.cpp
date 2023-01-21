@@ -202,18 +202,26 @@ void benchmark()
     std::vector<int> test(1000000);
     std::generate(test.begin(), test.end(), gen);
 
-    auto start = std::chrono::steady_clock::now();
+    uint64_t total_elapsed = 0;
+    uint64_t total_generated = 0;
     for (size_t i = 0; i < 100; i++) {
+        auto start = std::chrono::steady_clock::now();
         std::generate(test.begin(), test.end(), gen);
-        // test[0] = dist(rng);
-        find_longest_series_fedruches(test);
-        // find_longest_series_volkov(test);
+        auto end = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+        total_generated += elapsed;
+
+        start = std::chrono::steady_clock::now();
+        //
+        // find_longest_series_fedruches(test);
+        find_longest_series_volkov(test);
         // find_longest_series(test);
+
+        end = std::chrono::steady_clock::now();
+        elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+        total_elapsed += elapsed;
     }
-    auto end = std::chrono::steady_clock::now();
-    std::cout << "Elapsed time in microseconds: "
-        << std::chrono::duration_cast<std::chrono::microseconds>(end - start).count()
-        << " µs" << std::endl;
+    std::cout << "Elapsed time in nanoseconds: gen " << total_generated << ", calc "<<  total_elapsed << std::endl;
 }
 
 int main(int argc, char const *argv[])
