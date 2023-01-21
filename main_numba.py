@@ -32,7 +32,7 @@ def find_longest_series(series: List[int]) -> Result:
         # no diff, still monotonic
         edges_current[1] = i+1
             
-        if prev_direction != current_direction:
+        if prev_direction != current_direction and prev_direction != 0:
             edges_current[0] = i
         prev_direction = current_direction
     length = 0 if len(series) == 0 else edges_biggest[1] - edges_biggest[0] + 1
