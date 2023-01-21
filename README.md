@@ -7,8 +7,15 @@
 
 Сравним решения, если кто захочет решать)
 
-## build/run
+## build (python 3)
+
+```sh
+pip install -r requirements
+```
+
+## run
 
 ```sh
 python main.py
+python main_numba.py
 ```
