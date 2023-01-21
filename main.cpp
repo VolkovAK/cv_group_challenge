@@ -199,14 +199,15 @@ void benchmark()
     std::uniform_int_distribution<std::mt19937::result_type> dist(-100, 100);
     auto gen = [&dist, &rng](){ return dist(rng); };
 
-    std::vector<int> test(100);
+    std::vector<int> test(1000000);
     std::generate(test.begin(), test.end(), gen);
 
     auto start = std::chrono::steady_clock::now();
-    for (size_t i = 0; i < 10000; i++) {
-        test[0] = dist(rng);
-        find_longest_series_volkov(test);
-        // find_longest_series_fedruches(test);
+    for (size_t i = 0; i < 100; i++) {
+        std::generate(test.begin(), test.end(), gen);
+        // test[0] = dist(rng);
+        find_longest_series_fedruches(test);
+        // find_longest_series_volkov(test);
         // find_longest_series(test);
     }
     auto end = std::chrono::steady_clock::now();
@@ -218,15 +219,15 @@ void benchmark()
 int main(int argc, char const *argv[])
 {
     std::cout << "Challenge accepted!" << std::endl;
-    for (auto& test : tests) {
-        for (auto val : test){
-            std::cout << val << ", ";
-        }
-        std::cout << std::endl;
-
-        auto res = find_longest_series_volkov(test);
-        std::cout << "res [" << res.start << ", " << res.stop << "]  len:" << res.len << std::endl;
-    }
+    // for (auto& test : tests) {
+    //     for (auto val : test){
+    //         std::cout << val << ", ";
+    //     }
+    //     std::cout << std::endl;
+    //
+    //     auto res = find_longest_series_volkov(test);
+    //     std::cout << "res [" << res.start << ", " << res.stop << "]  len:" << res.len << std::endl;
+    // }
 
     for (size_t i = 0; i < 10; i++) {
         benchmark();
