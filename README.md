@@ -10,6 +10,6 @@
 ## build
 
 ```sh
-cargo run --release
+g++ -Ofast main.cpp
+./a.out
 ```
-
