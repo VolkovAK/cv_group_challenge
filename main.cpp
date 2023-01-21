@@ -55,7 +55,7 @@ Result find_longest_series_volkov(const Series& series){
         }
         // no diff, still monotonic
         edges_current[1] = i+1;
-        if (prev_direction != current_direction) {
+        if (prev_direction != current_direction && prev_direction != 0) {
             edges_current[0] = i;
         }
         prev_direction = current_direction;
