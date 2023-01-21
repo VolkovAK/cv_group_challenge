@@ -47,8 +47,9 @@ fn benchmark() {
 
     let mut test: Vec<i32> = (0..100).map(|_| rng.gen_range(-100..100)).collect(); 
     let before = Instant::now();
-    for _ in 0..10000 {
-        test[0] = rng.gen_range(-100..100);
+    for _ in 0..100 {
+        let test: Vec<i32> = (0..1_000_000).map(|_| rng.gen_range(-100..100)).collect(); 
+        // test[0] = rng.gen_range(-100..100);
         find_longest_series(&test);
     }
     println!("Elapsed time in microseconds: {} µs", before.elapsed().as_micros());
