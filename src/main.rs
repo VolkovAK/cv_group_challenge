@@ -49,18 +49,20 @@ fn benchmark() {
 
     let mut total_time_generating = 0;
     let mut total_time_calculating = 0;
+    let mut res = SeriesResult{start:0, stop:0, len: 0};;
     for _ in 0..100 {
         let before = Instant::now();
         let test: Vec<i32> = (0..1_000_000).map(|_| rng.gen_range(-100..100)).collect(); 
-        total_time_generating += before.elapsed().as_nanos();
+        total_time_generating += before.elapsed().as_millis();
 
         let before = Instant::now();
-        find_longest_series(&test);
-        total_time_calculating += before.elapsed().as_nanos();
+        res = find_longest_series(&test);
+        total_time_calculating += before.elapsed().as_millis();
     }
     // println!("Elapsed time in microseconds: \n\t{} - generating\n\t{} - calculating", total_time_generating / 1000, total_time_calculating / 1000);
-    println!("Elapsed time in nanoseconds: {}", total_time_calculating);
+    println!("Elapsed time in milliseconds: {}", total_time_calculating);
 
+    println!("{}", res.len);
 }
 
 fn main() {
