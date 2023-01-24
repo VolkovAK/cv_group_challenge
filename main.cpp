@@ -204,24 +204,26 @@ void benchmark()
 
     uint64_t total_elapsed = 0;
     uint64_t total_generated = 0;
+    auto res = Result{};
     for (size_t i = 0; i < 100; i++) {
         auto start = std::chrono::steady_clock::now();
         std::generate(test.begin(), test.end(), gen);
         auto end = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         total_generated += elapsed;
 
         start = std::chrono::steady_clock::now();
         //
-        // find_longest_series_fedruches(test);
-        find_longest_series_volkov(test);
+        res = find_longest_series_fedruches(test);
+        // res = find_longest_series_volkov(test);
         // find_longest_series(test);
 
         end = std::chrono::steady_clock::now();
-        elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count();
+        elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         total_elapsed += elapsed;
     }
-    std::cout << "Elapsed time in nanoseconds: gen " << total_generated << ", calc "<<  total_elapsed << std::endl;
+    std::cout << "Elapsed time in milliseconds: " << total_elapsed << std::endl;
+    std::cout << res.len << std::endl;
 }
 
 int main(int argc, char const *argv[])
